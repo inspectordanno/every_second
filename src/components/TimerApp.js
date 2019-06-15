@@ -52,6 +52,7 @@ const TimerApp = () => {
       <Button handleMouseDown={handleMouseDown} handleMouseUp={handleMouseUp} isGameOver={gameOver} />
       <TimeIndicator timeHeld={timeHeld} timeDifference={timeDifference} isPressed={isPressed} gameStarted={gameStarted} />
       <Tries tries={tries} />
+      {gameOver && <h1>Game Over!</h1>}
     </div>
   )
 }
