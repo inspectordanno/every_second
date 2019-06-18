@@ -1,60 +1,79 @@
-import React, { useState } from 'react';
-import moment from 'moment';
-import Button from './Button';
-import Level from './Level';
-import TargetTime from './TargetTime';
-import TimeIndicator from './TimeIndicator';
-import Tries from './Tries';
+import React, { useRef, useState } from "react";
+import Button from "./Button";
+import Level from "./Level";
+import TargetTime from "./TargetTime";
+import TimeIndicator from "./TimeIndicator";
+import Tries from "./Tries";
+import GameOver from "./GameOver";
 
 const TimerApp = () => {
   const [level, setLevel] = useState(1);
-  const [targetTime, setTargetTime] = useState(.2);
+  const [targetTime, setTargetTime] = useState(0.2);
   const [isPressed, setIsPressed] = useState(false);
-  const [whenPressed, setPressed] = useState(moment());
-  const [whenReleased, setReleased] = useState(moment());
-  const [tries, setTries] = useState(3);
+  const whenPressed = useRef(null);
+  const tries = useRef(3);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-
-  const timeHeld = whenReleased.diff(whenPressed) / 1000;
-  let timeDifference = Math.abs(targetTime - timeHeld);
-  timeDifference = Math.round(1000 * timeDifference) / 1000; //rounded
+  const timeHeld = useRef(null);  // make it a ref instead of just a variable
+  const timeDifference = useRef(null);  // make it a ref instead of just a variable
 
   const handleMouseDown = () => {
     !gameStarted && setGameStarted(true); //initialize game on the first click
     setIsPressed(true);
-    setPressed(moment());
+    whenPressed.current = Date.now();
   };
 
   const handleMouseUp = () => {
     setIsPressed(false);
-    setReleased(moment());
+    const whenReleased = Date.now();
 
-    console.log(timeHeld);
-    console.log(timeDifference);
+    timeHeld.current = (whenReleased - whenPressed.current) / 1000;
+    timeDifference.current = Math.abs(targetTime - timeHeld.current);
+    timeDifference.current = Math.round(1000 * timeDifference.current) / 1000; //rounded
 
-    if (timeDifference <= .1) {
+    console.log(timeHeld.current);
+    console.log(timeDifference.current);
+
+    if (timeDifference.current <= 0.1) {
       setLevel(level + 1);
-      setTargetTime(targetTime + .2);
-    } else if (timeDifference > .1 && tries >= 1) {
-      setTries(tries - 1);
-    }
-
-    if (tries === 1) {
-      setGameOver(true);
+      setTargetTime(targetTime + 0.2);
+    } else if (timeDifference.current > 0.1 && tries.current >= 1) {
+      tries.current--;
+      // consider using ref for tries as well to get rid of this weird tries === 1 and use tries.current === 0
+      if (tries.current === 0) {
+        setGameOver(true);
+      }
     }
   };
-  
+
+  const reset = () => {
+    setLevel(1);
+    setTargetTime(.2);
+    tries.current = 3;
+    setGameStarted(false);
+    setGameOver(false);
+    timeHeld.current = null;
+  }
+
   return (
     <div>
-      <Level level={level}/>
+      <Level level={level} />
       <TargetTime targetTime={targetTime} />
-      <Button handleMouseDown={handleMouseDown} handleMouseUp={handleMouseUp} isGameOver={gameOver} />
-      <TimeIndicator timeHeld={timeHeld} timeDifference={timeDifference} isPressed={isPressed} gameStarted={gameStarted} />
-      <Tries tries={tries} />
-      {gameOver && <h1>Game Over!</h1>}
+      <Button
+        handleMouseDown={handleMouseDown}
+        handleMouseUp={handleMouseUp}
+        isGameOver={gameOver}
+      />
+      <TimeIndicator
+        timeHeld={timeHeld.current}
+        timeDifference={timeDifference.current}
+        isPressed={isPressed}
+        gameStarted={gameStarted}
+      />
+      <Tries tries={tries.current} />
+      {gameOver && <GameOver reset={reset} />}
     </div>
-  )
-}
+  );
+};
 
 export default TimerApp;
