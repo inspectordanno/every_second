@@ -1,0 +1,12 @@
+.GameOver {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.GameOver button {
+  font-weight: bold;
+  margin: 0 auto;
+  width: 50px;
+  height: 25px;
+}

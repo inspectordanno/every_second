@@ -1,11 +1,16 @@
 import React from 'react';
+import '../styles/Button.css';
 
 const Button = ({ handleMouseDown, handleMouseUp, isGameOver }) => {
-
   return (
-    <div>
-      <button onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} disabled={isGameOver}></button>
-      <span>Hold the button down for the target length of time</span>
+    <div className="Button">
+      <button
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp} 
+        disabled={isGameOver}
+      >
+      </button>
+      <div>Hold the button down for the target length of time</div>
     </div>
   );
 }

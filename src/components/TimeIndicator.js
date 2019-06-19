@@ -1,11 +1,12 @@
 import React from 'react';
+import '../styles/TimeIndicator.css'
 
 const TimeIndicator = ({ timeHeld, timeDifference, isPressed, gameStarted }) => {  
 
   return (
-    <div>
-      <h2>Your Time: {(!isPressed) && timeHeld}</h2>
-      <h2>Difference: {(!isPressed && gameStarted) && timeDifference + ' seconds'}</h2>
+    <div className="TimeIndicator">
+      <h2>Your Time: {(!isPressed && gameStarted) && timeHeld}</h2>
+      <h2>Difference: {(!isPressed && gameStarted) && timeDifference}</h2>
     </div>
   );
 }

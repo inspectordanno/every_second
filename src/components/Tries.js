@@ -1,11 +1,10 @@
 import React from 'react';
+import '../styles/Tries.css'
 
 const Tries = ({ tries }) => {
   return (
-    <div>
-      <span>
-        Tries left: {tries}
-      </span>
+    <div className="Tries">
+      <h3>Tries Left: {tries}</h3>
     </div>
   );
 }
